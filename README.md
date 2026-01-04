@@ -1,1 +1,100 @@
-This website is to help teacher aide's for special ed kids and there teachers.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalmLearning AI - Offline Mental Health Support</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #ffe5e5; padding: 20px; margin: 0; }
+        #chat { border: 2px solid #ff0000; padding: 10px; height: 400px; overflow-y: auto; background-color: #fff; border-radius: 10px; }
+        #chat p { margin: 8px 0; line-height: 1.6; }
+        .input-area { display: flex; gap: 8px; margin-top: 10px; }
+        input { flex: 1; padding: 12px; font-size: 16px; border: 2px solid #ff0000; border-radius: 5px; }
+        button { padding: 12px 20px; background-color: #ff0000; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button:active { background-color: #cc0000; }
+        .highlight { font-weight: bold; color: #00AA00; }
+        .info-section { background-color: #fff; border: 2px solid #ff0000; padding: 15px; margin-top: 20px; border-radius: 10px; }
+        #clearBtn { margin-top: 10px; background-color: #00AA00; }
+        #clearBtn:active { background-color: #008800; }
+    </style>
+</head>
+<body>
+<h3>🧠 CalmLearning AI - Offline Mental Health Support</h3>
+<div id="chat"></div>
+<div class="input-area">
+    <input type="text" id="userInput" placeholder="Ask about a mental health condition..." />
+    <button id="sendBtn">Send</button>
+</div>
+<button id="clearBtn">Clear Chat</button>
+<div class="info-section">
+    <p><strong>Note:</strong> Offline, private, and free educational use only. Not a diagnosis or treatment.</p>
+</div>
+<script>
+(async function () {
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    const mentalIllnesses = {
+        depression: { category: "Mood Disorder", keyDifferentiator: "Feeling very sad and losing interest", primarySymptoms: ["Feeling sad", "Tired", "Not enjoying things", "Sleeping too much or too little", "Eating too much or too little"], treatment: "Talk to a counselor, practice healthy habits" },
+        bipolar: { category: "Mood Disorder", keyDifferentiator: "Having very happy and very sad times", primarySymptoms: ["Feeling super happy or excited", "Feeling very sad", "Doing risky things", "Not needing much sleep"], treatment: "Counselors, medicine, keeping a routine" },
+        anxiety: { category: "Anxiety Disorder", keyDifferentiator: "Worrying a lot and feeling nervous", primarySymptoms: ["Feeling worried", "Restless", "Fast heartbeat", "Tense muscles"], treatment: "Talk to a counselor, relax, sometimes medicine" },
+        ocd: { category: "Obsessive-Compulsive Disorder", keyDifferentiator: "Thoughts you can't stop and actions you repeat", primarySymptoms: ["Trouble stopping thoughts", "Repeating actions", "Feeling nervous if routines change"], treatment: "Special therapy, sometimes medicine" },
+        ptsd: { category: "Trauma Disorder", keyDifferentiator: "Feeling upset after something scary happened", primarySymptoms: ["Bad memories come back", "Avoiding reminders", "Feeling jumpy", "Bad dreams"], treatment: "Talk therapy, sometimes medicine" },
+        adhd: { category: "Neurodevelopmental Disorder", keyDifferentiator: "Trouble paying attention and sitting still", primarySymptoms: ["Can't focus", "Fidgety", "Acting without thinking"], treatment: "Counselors, help with organizing, sometimes medicine" },
+        autism: { category: "Neurodevelopmental Disorder", keyDifferentiator: "Difficulty with talking and social rules", primarySymptoms: ["Trouble talking with others", "Repeating actions", "Not liking changes"], treatment: "Practice social skills, learning help" }
+    };
+
+    function highlight(text) {
+        return text.replace(/(symptoms|treatment|disorder|anxiety|depression|bipolar|ptsd|adhd|ocd|schizophrenia|autism|dyslexia|eating)/gi, '<span class="highlight">$1</span>');
+    }
+
+    function addMessage(sender, text) {
+        const p = document.createElement('p');
+        p.innerHTML = `<strong>${sender}:</strong> ${highlight(text)}`;
+        chat.appendChild(p);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    function respond(query) {
+        const q = query.toLowerCase();
+        if (q.includes('suicide') || q.includes('kill myself') || q.includes('end my life')) {
+            return '⚠️ If you feel like hurting yourself, call 988 or text HOME to 741741. Help is available.';
+        }
+        for (const key in mentalIllnesses) {
+            if (q.includes(key)) {
+                const d = mentalIllnesses[key];
+                // Simplify response for younger audience
+                return `${key.toUpperCase()} (${d.category}) — ${d.keyDifferentiator}. Symptoms include: ${d.primarySymptoms.join(', ')}. You can get help by: ${d.treatment}.`;
+            }
+        }
+        return 'You can ask about anxiety, depression, ADHD, PTSD, autism, OCD, bipolar disorder, or other conditions.';
+    }
+
+    async function talk() {
+        const text = input.value.trim();
+        if (!text) return;
+        addMessage('You', text);
+
+        // Simulate AI simplification using offline data
+        const aiResponse = respond(text);
+        addMessage('CalmLearning AI', aiResponse);
+
+        input.value = '';
+    }
+
+    function clearChat() {
+        chat.innerHTML = '';
+        addMessage('CalmLearning AI', 'Chat cleared. Ask me about mental health conditions in simple words.');
+    }
+
+    sendBtn.onclick = talk;
+    input.onkeypress = e => { if (e.key === 'Enter') talk(); };
+    clearBtn.onclick = clearChat;
+
+    addMessage('CalmLearning AI', 'Hi! I am your offline AI assistant. Ask about mental health in simple words.');
+})();
+</script>
+</body>
+</html>
